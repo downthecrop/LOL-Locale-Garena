@@ -1,3 +1,9 @@
+## Edit to reflect the Garena current and prefered locale.
+## @downthecrop
+
+$old = "th_TH"
+$new = "en_US"
+
 param([switch]$Elevated)
 
 function Test-Admin {
@@ -21,12 +27,12 @@ if ((Test-Admin) -eq $false)  {
 }
 
 'running with full privileges'
-$loc = ".\command.bat"
+
 try {
     $client_process = Get-CimInstance Win32_Process -Filter "name = 'RiotClientServices.exe'"
+    $command = $client_process.CommandLine -replace($old, $new)
     Kill-Tree $client_process.ProcessId
-    $command = $client_process.CommandLine
-    $command -replace("th_TH", "en_US") | Out-File -FilePath "$loc" -Encoding ascii
+    cmd.exe /c $command
+    exit
 }
 catch {}
-finally {& $loc}
